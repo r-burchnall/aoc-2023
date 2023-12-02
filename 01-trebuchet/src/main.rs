@@ -1,5 +1,8 @@
 fn main() {
-    //calculate_total_using_only_nums();
+    // Puzzle part one
+    calculate_total_using_only_nums();
+
+    // Puzzle part two
     calculate_total();
 }
 
@@ -22,8 +25,6 @@ fn calculate_total() {
                         "six" => nums.push(6),
                         _ => {}
                     }
-                    // idx += 3;
-                    // continue
                 }
 
                 if diff >= 4 {
@@ -34,8 +35,6 @@ fn calculate_total() {
                         "nine" => nums.push(9),
                         _ => {}
                     }
-                    // idx += 4;
-                    // continue
                 }
 
                 if diff >= 5 {
@@ -46,12 +45,10 @@ fn calculate_total() {
                         "eight" => nums.push(8),
                         _ => {}
                     }
-                    // idx += 5;
-                    // continue
                 }
 
-                let maybeChar = val.chars().nth(idx);
-                if let Some(char) = maybeChar {
+                let maybe_char = val.chars().nth(idx);
+                if let Some(char) = maybe_char {
                     match char {
                         '1' => nums.push(1),
                         '2' => nums.push(2),
@@ -114,8 +111,6 @@ fn calculate_total_using_only_nums() {
         let num = str::parse::<usize>(&*val);
         if let Ok(n) = num {
             total += n
-        } else {
-            println!("{:?} was not a number", num);
         }
     }
 

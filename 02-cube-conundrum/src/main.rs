@@ -1,7 +1,21 @@
-use std::str::FromStr;
-
 fn main() {
     part_one();
+    part_two();
+}
+
+fn part_two() {
+    let data = std::fs::read_to_string("games")
+        .expect("there is no games file");
+    let sum: usize = data
+        .lines()
+        .map(|x| Game::from(x))
+        .map(|x| {
+            let (r, g, b) = x.min_num_of_cubes();
+            return r * g * b;
+        })
+        .sum();
+
+    println!("the sum of the power of the minimum value of dice is: {}", sum)
 }
 
 fn part_one() {
@@ -59,6 +73,10 @@ impl Game {
             && self.highest_quantity_red() <= max_red
             && self.highest_quantity_green() <= max_green
     }
+
+    fn min_num_of_cubes(&self) -> (usize, usize, usize) {
+        return (self.highest_quantity_red(), self.highest_quantity_blue(), self.highest_quantity_green())
+    }
 }
 
 impl From<&str> for Game {
@@ -97,15 +115,3 @@ impl From<&str> for Round {
         return round;
     }
 }
-
-// fn game_from_string(s: &str) -> usize {
-//     let idx = s.find(":").unwrap();
-//     let game_num: usize = s.get(5..idx).unwrap().parse().unwrap();
-//
-//     let games = s.split(";")
-//         .map(|x| x.split(",").map(|y| y.split(" ").collect::<Vec<&str>>()).collect::<Vec<Vec<&str>>>())
-//         .collect::<Vec<Vec<Vec<&str>>>>();
-//     println!("{:?}", games);
-//
-//     return game_num
-// }

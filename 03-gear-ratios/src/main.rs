@@ -1,6 +1,11 @@
 fn main() {
+    part_one();
+    part_two();
+}
+
+fn part_two() {
     let data = std::fs::read_to_string("engine")
-        .expect("there is no games file");
+        .expect("there is no engine file");
 
     let mut found_numbers: Vec<NumPositions> = vec![];
 
@@ -17,7 +22,7 @@ fn main() {
                 chars.push(x);
             } else {
                 if chars.len() > 0 {
-                    found_numbers.push(NumPositions{
+                    found_numbers.push(NumPositions {
                         value: chars.parse().expect("discovered characters should be a number"),
                         start_pos: (start as usize, y),
                         end_pos: (idx - 1, y),
@@ -29,7 +34,74 @@ fn main() {
         });
 
         if chars.len() > 0 {
-            found_numbers.push(NumPositions{
+            found_numbers.push(NumPositions {
+                value: chars.parse().expect("discovered characters should be a number"),
+                start_pos: (start as usize, y),
+                end_pos: (line.len() - 1, y),
+            });
+            start = -1;
+        }
+    });
+
+    let mut total = 0;
+    data.lines().enumerate().for_each(|(y, line)| {
+        let line_len = line.len();
+
+        line.chars().enumerate().for_each(|(x, char)| {
+            if char == '*' {
+                let symbol = Symbol {
+                    max_y_size: total_lines - 1,
+                    max_x_size: line_len - 1,
+                    pos: (x, y),
+                };
+                let adjacent = symbol.calculate_adjacency();
+                let discovered_parts: Vec<&NumPositions> = found_numbers
+                    .iter()
+                    .filter(|&i| i.contains(&adjacent))
+                    .collect();
+
+                if discovered_parts.len() == 2 {
+                    total += discovered_parts.get(0).expect("honestly mate, what the fuck are you playing at...").value * discovered_parts.get(1).expect("like seriously?").value;
+                }
+            }
+        })
+    });
+
+    println!("Total of gear ratios: {}", total)
+}
+
+fn part_one() {
+    let data = std::fs::read_to_string("engine")
+        .expect("there is no engine file");
+
+    let mut found_numbers: Vec<NumPositions> = vec![];
+
+    let total_lines = data.lines().count();
+
+    data.lines().enumerate().for_each(|(y, line)| {
+        let mut chars: String = String::new();
+        let mut start: i32 = -1;
+        line.chars().enumerate().for_each(|(idx, x)| {
+            if x.is_digit(10) {
+                if start == -1 {
+                    start = idx as i32
+                }
+                chars.push(x);
+            } else {
+                if chars.len() > 0 {
+                    found_numbers.push(NumPositions {
+                        value: chars.parse().expect("discovered characters should be a number"),
+                        start_pos: (start as usize, y),
+                        end_pos: (idx - 1, y),
+                    });
+                    start = -1;
+                    chars.clear()
+                }
+            }
+        });
+
+        if chars.len() > 0 {
+            found_numbers.push(NumPositions {
                 value: chars.parse().expect("discovered characters should be a number"),
                 start_pos: (start as usize, y),
                 end_pos: (line.len() - 1, y),
@@ -55,7 +127,7 @@ fn main() {
                 let adjacent = symbol.calculate_adjacency();
                 let discovered_parts: Vec<&NumPositions> = found_numbers
                     .iter()
-                    .filter( |&i| i.contains( &adjacent))
+                    .filter(|&i| i.contains(&adjacent))
                     .collect();
 
                 println!("adjacent: {:?}", adjacent);
@@ -66,7 +138,7 @@ fn main() {
                         total += x.value;
                         println!("adding {}", x.value)
                         // found_numbers.remove(found_numbers.)
-                    } )
+                    })
             }
         })
     });

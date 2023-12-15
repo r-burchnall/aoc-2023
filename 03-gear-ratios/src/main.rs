@@ -2,7 +2,6 @@ fn main() {
     let data = std::fs::read_to_string("engine")
         .expect("there is no games file");
 
-    let valid_symbols: [char; 4] = ['*', '#', '$', '+'];
     let mut found_numbers: Vec<NumPositions> = vec![];
 
     let total_lines = data.lines().count();
@@ -47,7 +46,7 @@ fn main() {
         let line_len = line.len();
 
         line.chars().enumerate().for_each(|(x, char)| {
-            if valid_symbols.contains(&char) {
+            if !char.is_digit(10) && char != '.' {
                 let symbol = Symbol {
                     max_y_size: total_lines - 1,
                     max_x_size: line_len - 1,
